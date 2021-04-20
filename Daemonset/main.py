@@ -1,5 +1,12 @@
 from flask import Flask
+import http.client
+import os
+
+
+
 app = Flask(__name__)
+
+
 
 @app.route('/')
 def index():
@@ -8,6 +15,8 @@ def index():
 @app.route('/ping')
 def ping():
     return "ping ok"
+
+
 
 @app.route('/testnfs/<filename>')
 def file(filename):
@@ -18,5 +27,18 @@ def file(filename):
             return 'Failed to write to file'.format(filename)            
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    try:
+        WHOST = os.getenv('WHOST') # None
+        WPORT = os.getenv('WPORT')
+        HOSTNAME = os.getenv('HOSTNAME')
+        connection = http.client.HTTPConnection(WHOST,WPORT)
+        connection.request("GET", "register?hostname="+HOSTNAME)
+        response = connection.getresponse()  
+        data = response.read()
+        print("DEBUG"+data)
+    except:
+        print("Could not register")
+    app.run(host='0.0.0.0', port=8081)
     app.run(debug=True)
+
+    

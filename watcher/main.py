@@ -11,6 +11,11 @@ def index():
 def ping():
     return "ping ok"
 
+@app.route('/register')
+def register():
+    hostname = request.args.get('hostname')
+    return "Registration ok"
+
 @app.route('/checkall')
 def checkminions():
     DSHOST = os.getenv('DSHOST') # None
